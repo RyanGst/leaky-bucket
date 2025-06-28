@@ -8,7 +8,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     networks:
-      - etternizer-network
+      - leaky-bucket
     restart: unless-stopped
 
 
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
+      target: build
     env_file:
       - .env
     container_name: api
@@ -25,14 +25,14 @@ services:
     depends_on:
       - mongodb
     networks:
-      - etternizer-network
+      - leaky-bucket
     command: bun --watch src/index.ts
     volumes:
       - ./src:/app/src
       - /app/node_modules
 
 networks:
-  etternizer-network:
+  leaky-bucket:
     driver: bridge
 
 volumes:
