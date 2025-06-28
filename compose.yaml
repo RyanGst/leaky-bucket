@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - etternizer-network
+    restart: unless-stopped
+
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    env_file:
+      - .env
+    container_name: api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - etternizer-network
+    command: bun --watch src/index.ts
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+
+networks:
+  etternizer-network:
+    driver: bridge
+
+volumes:
+  mongodb_data: 
