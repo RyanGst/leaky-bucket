@@ -2,7 +2,7 @@ import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { userMiddleware } from "./middleware/user-middleware";
 
-const app = new Elysia()
+export const app = new Elysia()
 	.use(
 		cors({
 			origin: process.env.BETTER_AUTH_URL!,
@@ -12,7 +12,7 @@ const app = new Elysia()
 		}),
 	)
 	.use(userMiddleware)
-	.get("/", () => "Hello Elysia!")
+	.get("/", ({ user }) => `Hello ${user.name}!`, { auth: true })
 	.listen(3000);
 
 console.log(
