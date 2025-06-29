@@ -29,6 +29,7 @@ const getOrCreateBucket = (
 export const getCurrentTokens = (
 	bucket: BucketState,
 ): number => {
+	console.log("tokens remaining:", bucket.tokens)
 	return bucket.tokens;
 };
 
@@ -52,6 +53,7 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 		const userId = ctx.user?.id
 		const bucket = getOrCreateBucket(userId, 3)
 		const tokens = getCurrentTokens(bucket)
+		console.log("tokens remaining:", tokens)
 		if (tokens <= 0) return status(429)
 		consumeToken(bucket)
 	})
