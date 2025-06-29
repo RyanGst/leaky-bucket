@@ -34,8 +34,9 @@ export const getCurrentTokens = (
 };
 
 export const consumeToken = (bucket: BucketState): number => {
+	console.log("consuming token")
+	console.log("bucket", buckets)
 	bucket.tokens = Math.max(0, bucket.tokens - 1);
-	console.log("token consumed for user - remaining:", bucket.tokens)
 	return bucket.tokens;
 };
 
@@ -53,7 +54,6 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 		const userId = ctx.user?.id
 		const bucket = getOrCreateBucket(userId, 3)
 		const tokens = getCurrentTokens(bucket)
-		console.log("tokens remaining:", tokens)
 		if (tokens <= 0) return status(429)
 		consumeToken(bucket)
 	})
@@ -73,8 +73,10 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 		auth: true,
 		query: PixQueryModel.pixQuery,
 		afterResponse: (ctx) => {
-			const userId = ctx.user?.id
-			restoreToken(userId, 3)
+			if (ctx.set.status === 200) {
+				const userId = ctx.user?.id
+				restoreToken(userId, 3)
+			}
 		}
 	}
 	)

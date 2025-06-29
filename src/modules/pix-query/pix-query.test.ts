@@ -34,7 +34,7 @@ describe('pix-query module', () => {
 		expect(body).toEqual({ ok: true })
 	})
 
-	it.only('should rate limit user after 3 failing requests', async () => {
+	it('should rate limit user after 3 failing requests', async () => {
 		const session = await createTestUser()
 		const authToken = session.headers.get('set-auth-token')
 
