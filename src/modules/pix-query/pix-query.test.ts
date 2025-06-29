@@ -16,22 +16,25 @@ describe('pix-query module', () => {
 		expect(response.status).toBe(400)	
 	})
 
-	it.only('should return 200 for a successful request', async () => {
+	it('should return 200 for a successful request', async () => {
 		const session = await createTestUser()
 		const authToken = session.headers.get('set-auth-token')
 
-		const request = new Request('http://localhost/pix-query', {
+		const request = new Request('http://localhost/pix-query?alwaysFail=false', {
 			headers: {
 				Authorization: `Bearer ${authToken}`,
 			},
 		})
+
 		const response = await app.handle(request)
+		console.log("response", response)
+		
 		expect(response.status).toBe(200)
 		const body = await response.json()
 		expect(body).toEqual({ ok: true })
 	})
 
-	it('should rate limit user after 3 failing requests', async () => {
+	it.only('should rate limit user after 3 failing requests', async () => {
 		const session = await createTestUser()
 		const authToken = session.headers.get('set-auth-token')
 
