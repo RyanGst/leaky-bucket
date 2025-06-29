@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'bun:test'
 import { app } from '../..'
-import { createTestUser } from '../../utils/createTestUser';
+import { createTestUser } from '../../utils/createTestUser'
 
 describe('pix-query module', () => {
 	it('should fail if query param alwaysFail is present and is true', async () => {
-		const session = await createTestUser();
-        const authToken = session.headers.get("set-auth-token")
-                
-        const request = new Request('http://localhost/pix-query?alwaysFail=true', {
-            headers: {
-                Authorization: `Bearer ${authToken}`,
-            },
-        })
+		const session = await createTestUser()
+		const authToken = session.headers.get('set-auth-token')
+
+		const request = new Request('http://localhost/pix-query?alwaysFail=true', {
+			headers: {
+				Authorization: `Bearer ${authToken}`
+			}
+		})
 		const response = await app.handle(request)
-		expect(response.status).toBe(400)	
+		expect(response.status).toBe(400)
 	})
 
 	it('should return 200 for a successful request', async () => {
@@ -22,13 +22,13 @@ describe('pix-query module', () => {
 
 		const request = new Request('http://localhost/pix-query?alwaysFail=false', {
 			headers: {
-				Authorization: `Bearer ${authToken}`,
-			},
+				Authorization: `Bearer ${authToken}`
+			}
 		})
 
 		const response = await app.handle(request)
-		console.log("response", response)
-		
+		console.log('response', response)
+
 		expect(response.status).toBe(200)
 		const body = await response.json()
 		expect(body).toEqual({ ok: true })
@@ -42,17 +42,14 @@ describe('pix-query module', () => {
 
 		// Three failing requests to consume tokens
 		for (let i = 0; i < 3; i++) {
-			const failingRequest = new Request(
-				'http://localhost/pix-query?alwaysFail=true',
-				{ headers },
-			)
+			const failingRequest = new Request('http://localhost/pix-query?alwaysFail=true', { headers })
 			const response = await app.handle(failingRequest)
 			expect(response.status).toBe(400)
 		}
 
 		// Fourth request should be rate-limited
 		const rateLimitedRequest = new Request('http://localhost/pix-query', {
-			headers,
+			headers
 		})
 		const response = await app.handle(rateLimitedRequest)
 		expect(response.status).toBe(429)

@@ -2,9 +2,11 @@
 import { t } from 'elysia'
 
 export namespace PixQueryModel {
-	export const pixQuery = t.Partial(t.Object({
-		alwaysFail: t.Boolean()
-	}))
+	export const pixQuery = t.Partial(
+		t.Object({
+			alwaysFail: t.Boolean()
+		})
+	)
 
 	export type pixQuery = typeof pixQuery.static
 
