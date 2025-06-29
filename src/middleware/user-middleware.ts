@@ -1,7 +1,6 @@
-import Elysia from "elysia";
+import Elysia, { InferContext } from "elysia";
 import { auth } from "../lib/auth";
 
-// user middleware (compute user and session and pass to routes)
 export const userMiddleware = new Elysia({ name: "better-auth" })
   .mount(auth.handler)
   .macro({
@@ -20,3 +19,5 @@ export const userMiddleware = new Elysia({ name: "better-auth" })
       },
     },
   });
+
+export type ProtectedContext = InferContext<typeof userMiddleware>
