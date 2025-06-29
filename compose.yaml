@@ -9,6 +9,8 @@ services:
       - mongodb_data:/data/db
     networks:
       - leaky-bucket
+    environment:
+      - MONGO_INITDB_DATABASE=woovi-challenge
     restart: unless-stopped
 
 
@@ -29,7 +31,6 @@ services:
     command: bun --watch src/index.ts
     volumes:
       - ./src:/app/src
-      - /app/node_modules
 
 networks:
   leaky-bucket:
