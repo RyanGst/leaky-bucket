@@ -19,4 +19,4 @@ jobs:
             bun-version: latest
       - run: bun install
       - run: cp .env.example .env
-      - run: docker compose run --rm api cp .env.example .env && bun test
+      - run: docker compose run --rm api bun test
