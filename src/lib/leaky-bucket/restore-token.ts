@@ -1,8 +1,10 @@
-import { buckets } from './leaky-bucket'
+import { redis } from '../redis'
 
-export const restoreToken = (identifier: string, capacity: number): void => {
-	const bucket = buckets.get(identifier)
-	if (bucket) {
-		bucket.tokens = Math.min(capacity, bucket.tokens + 1)
+export const restoreToken = async (bucketId: string, capacity: number): Promise<void> => {
+	const key = `bucket:${bucketId}`
+	
+	const current = await redis.get(key)
+	if (current && parseInt(current) < capacity) {
+	  await redis.incr(key)
 	}
-}
+  }

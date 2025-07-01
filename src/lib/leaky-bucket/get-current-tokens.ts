@@ -1,5 +1,7 @@
-import type { BucketState } from './bucket-state'
+import { redis } from '../redis'
 
-export const getCurrentTokens = (bucket: BucketState): number => {
-	return bucket.tokens
-}
+export const getCurrentTokens = async (bucketId: string): Promise<number> => {
+	const key = `bucket:${bucketId}`
+	const tokens = await redis.get(key)
+	return tokens ? parseInt(tokens) : 0
+  }

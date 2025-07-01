@@ -1,6 +1,15 @@
-import type { BucketState } from './bucket-state'
+import { redis } from '../redis'
 
-export const consumeToken = (bucket: BucketState): number => {
-	bucket.tokens = Math.max(0, bucket.tokens - 1)
-	return bucket.tokens
+export const consumeToken = async (bucketId: string) => {
+	const key = `bucket:${bucketId}`
+  
+	// DECR is atomic and returns the new value
+	const newTokens = await redis.decr(key)
+	
+	if (newTokens >= 0) {
+	  return true
+	} else {
+	  await redis.incr(key)
+	  return false
+	}
 }

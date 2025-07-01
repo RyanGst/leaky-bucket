@@ -1,18 +1,16 @@
+import { redis } from '../redis'
 import type { BucketState } from './bucket-state'
-import { getCurrentTokens } from './get-current-tokens'
-import { buckets } from './leaky-bucket'
 
-export const getOrCreateBucket = (identifier: string, capacity: number): BucketState => {
-	let bucket = buckets.get(identifier)
-
-	if (!bucket) {
-		bucket = {
-			tokens: capacity
-		}
-		buckets.set(identifier, bucket)
-	} else {
-		getCurrentTokens(bucket)
+export const getOrCreateBucket = async (identifier: string, capacity: number): Promise<BucketState> => {
+	const key = `bucket:${identifier}`
+  
+	// Set only if key doesn't exist (NX flag)
+	await redis.set(key, capacity.toString(), 'NX')
+	
+	const tokens = await redis.get(key)
+	
+	return {
+	  tokens: parseInt(tokens!),
+	  capacity
 	}
-
-	return bucket
 }

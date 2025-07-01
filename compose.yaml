@@ -32,9 +32,20 @@ services:
     volumes:
       - ./src:/app/src
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - leaky-bucket
+    command: redis-server --appendonly yes
+
 networks:
   leaky-bucket:
     driver: bridge
 
 volumes:
   mongodb_data: 
+  redis_data: 

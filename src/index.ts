@@ -5,6 +5,9 @@ import { OpenAPI } from './lib/open-api'
 import { userMiddleware } from './middleware/user-middleware'
 import { health } from './modules/health/health.index'
 import { pixQuery } from './modules/pix-query/pix-query.index'
+import {redis} from  './lib/redis'
+
+redis.connect()
 
 export const app = new Elysia()
 	.use(
