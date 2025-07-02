@@ -2,7 +2,6 @@ import { type Job, Queue, Worker } from 'bullmq'
 import { Constants } from '../utils/constants'
 import { redis } from './redis'
 
-
 export const periodicRefillQueue = new Queue('periodic-refill', {
 	connection: {
 		host: 'redis',

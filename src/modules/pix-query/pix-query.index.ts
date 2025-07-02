@@ -29,7 +29,3 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 			}
 		}
 	)
-function scheduleTokenRefill(id: any, LEAKY_BUCKET_CAPACITY: any): any {
-	throw new Error('Function not implemented.')
-}
-
