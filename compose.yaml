@@ -26,6 +26,7 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
+      - redis
     networks:
       - leaky-bucket
     command: bun --watch src/index.ts
