@@ -2,10 +2,10 @@ import { cors } from '@elysiajs/cors'
 import swagger from '@elysiajs/swagger'
 import { Elysia } from 'elysia'
 import { OpenAPI } from './lib/open-api'
+import { redis } from './lib/redis'
 import { userMiddleware } from './middleware/user-middleware'
 import { health } from './modules/health/health.index'
 import { pixQuery } from './modules/pix-query/pix-query.index'
-import {redis} from  './lib/redis'
 
 redis.connect()
 
