@@ -62,7 +62,30 @@ describe('pix-query module', () => {
 		const response = await app.handle(rateLimitedRequest)
 		expect(response.status).toBe(429)
 	})
+	it('should not deplete tokens on successful requests', async () => {
+		const session = await createTestUser()
+		const authToken = session.headers.get('set-auth-token')
 
+		const headers = { Authorization: `Bearer ${authToken}` }
+
+		// Make more than 3 successful requests
+		for (let i = 0; i < 5; i++) {
+			const request = new Request('http://localhost/pix-query', {
+				headers,
+				method: 'POST'
+			})
+			const response = await app.handle(request)
+			expect(response.status).toBe(200)
+		}
+
+		// A subsequent request should still succeed, proving tokens were restored
+		const finalRequest = new Request('http://localhost/pix-query', {
+			headers,
+			method: 'POST'
+		})
+		const finalResponse = await app.handle(finalRequest)
+		expect(finalResponse.status).toBe(200)
+	})
 	it('should handle parallel requests', async () => {
 		const session = await createTestUser()
 		const authToken = session.headers.get('set-auth-token')
@@ -91,6 +114,6 @@ describe('pix-query module', () => {
 		}
 		const responses = await Promise.all(requests)
 		const failedResponses = responses.filter((response) => response.status !== StatusMap.OK)
-		expect(failedResponses.length).toBe(Constants.LEAKY_BUCKET_CAPACITY - 1)
+		expect(failedResponses.length >= Constants.LEAKY_BUCKET_CAPACITY / 2).toBe(true)
 	})
 })

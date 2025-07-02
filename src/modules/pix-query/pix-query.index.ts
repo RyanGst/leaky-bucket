@@ -18,11 +18,11 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 			auth: true,
 			query: PixQueryModel.pixQuery,
 			beforeHandle: (ctx) => handleRateLimit(ctx.user.id),
-			// afterResponse: (ctx) =>
-			// 	restoreTokenIfSuccess({
-			// 		status: <number>ctx.set.status,
-			// 		userId: ctx.user.id
-			// 	}),
+			afterResponse: (ctx) =>
+				restoreTokenIfSuccess({
+					status: <number>ctx.set.status,
+					userId: ctx.user.id
+				}),
 			detail: {
 				description: 'Pix query endpoint - returns a JSON object with the status of the query',
 				tags: ['pix-query']
