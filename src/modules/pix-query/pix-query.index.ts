@@ -2,7 +2,7 @@ import Elysia, { status } from 'elysia'
 import { userMiddleware } from '../../middleware/user-middleware'
 import { handleRateLimit } from './handle-rate.limit'
 import { PixQueryModel } from './model'
-import { restoreTokenIfSuccess } from './restore-token-if-success'
+import { restoreTokenAfterResponse } from './restore-token-after-response'
 
 export const pixQuery = new Elysia({ prefix: '/pix-query' })
 	.use(userMiddleware)
@@ -19,7 +19,7 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 			query: PixQueryModel.pixQuery,
 			beforeHandle: (ctx) => handleRateLimit(ctx.user.id),
 			afterResponse: (ctx) =>
-				restoreTokenIfSuccess({
+				restoreTokenAfterResponse({
 					status: <number>ctx.set.status,
 					userId: ctx.user.id
 				}),
@@ -29,3 +29,7 @@ export const pixQuery = new Elysia({ prefix: '/pix-query' })
 			}
 		}
 	)
+function scheduleTokenRefill(id: any, LEAKY_BUCKET_CAPACITY: any): any {
+	throw new Error('Function not implemented.')
+}
+

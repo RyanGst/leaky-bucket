@@ -43,6 +43,21 @@ services:
       - leaky-bucket
     command: redis-server --appendonly yes
 
+  bullboard:
+        container_name: bullboard
+        image: venatum/bull-board:latest
+        restart: unless-stopped
+        ports:
+            - "3001:3001"
+        environment:
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            PORT: 3001
+        depends_on:
+            - redis
+        networks:
+            - leaky-bucket
+
 networks:
   leaky-bucket:
     driver: bridge
