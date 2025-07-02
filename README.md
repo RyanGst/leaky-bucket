@@ -1,15 +1,40 @@
-# Elysia with Bun runtime
+# Leaky Bucket Rate Limiter
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
+A multi-tenant rate limiting service built with Elysia and Bun, implementing a leaky bucket algorithm with Redis persistence.
+
+## 🔥 Core Features
+
+- **Multi-tenancy**: Each user gets their own leaky bucket
+- **Bearer Token Authentication**: Simple token validation
+- **Token Management**:
+  - Decreases by 1 on every request
+  - Permanently removed on failed requests (status !== 200)
+  - Replenished 1 per hour, capped at 10 tokens max
+
+## 🏗️ Architecture
+
+- **Framework**: Elysia with Bun runtime
+- **Database**: Redis for bucket state persistence
+- **Queue**: BullMQ for scheduled token refills
+- **Rate Limiting**: Leaky bucket algorithm per user
+
+## 🚀 Getting Started
+
+### Development
+
 ```bash
-bun create elysia ./elysia-example
+docker compose up -d
+
+docker exec api sh
 ```
 
-## Development
-To start the development server run:
-```bash
-bun run dev
-```
+Open http://localhost:3000/ to see the API.
 
-Open http://localhost:3000/ with your browser to see the result.
+## 📖 API Usage
+
+### Rate Limiting Behavior
+- Each request consumes 1 token
+- Failed requests (non-200 status) permanently remove tokens
+- Tokens are automatically replenished at 1 per hour
+- Maximum bucket capacity: [10 tokens](https://github.com/RyanGst/leaky-bucket/blob/e9b58e8b397e69f3a344423bb1a8645545fd4cec/src/utils/constants.ts)
+
